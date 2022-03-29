@@ -31,7 +31,7 @@ def main():
     musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
     
     # 화면 랜더링
-    return render_template('main.html', is_login = "True", myList= myList_get , musics = musics_get)
+    return render_template('main.html', myList= myList_get , musics = musics_get)
 
 
 
