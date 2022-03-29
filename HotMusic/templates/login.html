@@ -71,10 +71,12 @@
                 data: { id_give: userid, pw_give: userpw },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert('로그인 완료');
-                        window.location.reload();
+                        $.cookie('mytoken', response['token'])
+                        alert('로그인 성공');
+
+                        window.location.href = '../templates/index.html'
                     } else {
-                        alert('로그인 실패');
+                        alert(response['msg']);
                     }
                 }
             })
@@ -90,6 +92,10 @@
                     if (response['result'] == 'success') {
                         alert('회원가입 완료')
                         window.location.reload()
+                    }
+                    else {
+                        alert('이미 존재하는 아이디 입니다.');
+                        window.location.reload();
                     }
                 }
             })
