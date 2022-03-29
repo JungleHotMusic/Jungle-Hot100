@@ -65,30 +65,30 @@
 
         $(document).ready(function () {
             // 기본 화면 설정
-
-
             // 로딩 후, 쿠키 확인
             if ($.cookie('mytoken') == undefined) {
                 $("#defaultDiv").show();
                 $("#editDiv").hide();
                 $("#buttonEdit").show();
                 $("#buttonDelete").hide();
+            }else{
+                load_user_info();
             }
-            showArticles();
+            // showArticles();
         });
 
-        function postArticle() {
-            $.ajax({
-                type: "POST",
-                url: "/memo",
-                data: {},
-                success: function (response) { // 성공하면
-                    if (response["result"] == "success") {
-                        alert(response["msg"]);
-                    }
-                }
-            })
-        }
+        // function postArticle() {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/memo",
+        //         data: {},
+        //         success: function (response) { // 성공하면
+        //             if (response["result"] == "success") {
+        //                 alert(response["msg"]);
+        //             }
+        //         }
+        //     })
+        // };
 
         // 수정 중
         function editPlaylist() {
@@ -113,6 +113,23 @@
                 $("#buttonEdit").text("수정 취소");
             }
         }
+        function load_user_info(){
+            $.ajax({
+                type : 'GET',
+                url : '/user',
+                headers : {'token_give':$.cookie('mytoken')},
+                success : function(response){
+                    if (response['result'] == 'success'){
+                        alert(response['name']+'회원님 안녕하세요')
+                    }else{
+                        $.removeCookie('mytoken');
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+
 
         function logout(){
             $.removeCookie('mytoken');
