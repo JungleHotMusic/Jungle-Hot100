@@ -19,6 +19,17 @@ app.secret_key = b'xr43321\n\xec'
 admin_id = 'admin'
 admin_pw = '1234'
 
+# 임시 추가
+@app.route('/')
+def main():
+    # 더미 정보
+    # 회원의 플레이리스트
+    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    # 랭킹 100 정보
+    musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    
+    # 화면 랜더링
+    return render_template('main.html', is_login = "True", myList= myList_get , musics = musics_get)
 
 @app.route('/home')
 def home():
@@ -55,4 +66,4 @@ def api_login():
 
 
 if __name__ == '__main__':
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0',port=5001,debug=True)
