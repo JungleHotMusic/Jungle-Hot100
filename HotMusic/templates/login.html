@@ -19,9 +19,13 @@
         integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
         crossorigin="anonymous"></script>
 
-    <!-- 구글폰트 -->
-    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&amp;display=swap" rel="stylesheet">
-    <title>Document</title>
+   <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <title>Login</title>
 
     <style>
         .title {
@@ -74,7 +78,7 @@
                         $.cookie('mytoken', response['token'])
                         alert('로그인 성공');
 
-                        window.location.href = '../templates/index.html'
+                        window.location.href = './index'
                     } else {
                         alert(response['msg']);
                     }

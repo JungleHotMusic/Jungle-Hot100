@@ -63,6 +63,7 @@ def api_login():
             'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        print(token)
 
         return jsonify({'result':'success', 'token':token})
     else:
