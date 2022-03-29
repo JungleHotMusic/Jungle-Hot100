@@ -20,10 +20,18 @@ SECRET_KEY = 'JungleHotMusic'
 admin_id = 'admin'
 admin_pw = '1234'
 
+# 임시 추가
+@app.route('/')
+def main():
+    # 더미 정보
+    # 회원의 플레이리스트
+    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    # 랭킹 100 정보
+    musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    
+    # 화면 랜더링
+    return render_template('main.html', is_login = "True", myList= myList_get , musics = musics_get)
 
-@app.route('/home')
-def home():
-    return render_template('index.html')
 
 
 @app.route('/login')
@@ -39,7 +47,7 @@ def api_register():
     register_check = db.user.find_one({'id':id_receive})
 
     if register_check != None:
-        return jsonify({'result':'fail'})
+        return jsonify({'result':'fail', 'msg':'이미 존재하는 아이디입니다.'})
     else:
         pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
         db.user.insert_one({'id':id_receive, 'pw':pw_hash})
@@ -60,7 +68,7 @@ def api_login():
     if login_check != None:
         payload = {
             'id' : id_receive,
-            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+            'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         print(token)
@@ -73,4 +81,4 @@ def api_login():
 
 
 if __name__ == '__main__':
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0',port=5001,debug=True)

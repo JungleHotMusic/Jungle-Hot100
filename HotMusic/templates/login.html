@@ -75,10 +75,9 @@
                 data: { id_give: userid, pw_give: userpw },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        $.cookie('mytoken', response['token'])
+                        $.cookie('mytoken', response['token']);
                         alert('로그인 성공');
-
-                        window.location.href = './index'
+                        window.location.href = '/';
                     } else {
                         alert(response['msg']);
                     }
@@ -98,7 +97,7 @@
                         window.location.reload()
                     }
                     else {
-                        alert('이미 존재하는 아이디 입니다.');
+                        alert(response['msg']);
                         window.location.reload();
                     }
                 }
@@ -117,26 +116,22 @@
             <div class="field">
                 <label class="label">아이디</label>
                 <div class="control">
-                    <input Required class="input" type="text" id='userid'>
+                    <input class="input" type="text" id='userid' required="true">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">비밀번호</label>
                 <div class="control">
-                    <input Required class="input" type="password" id='userpw'>
+                    <input class="input" type="password" id='userpw' required="ture">
                 </div>
             </div>
 
-            <div class="input-func">
-                <button onclick=login() class="button is-primary" id="login-btn">로그인하기</button>
-                <button onclick=register() class="button is-primary is-light" id="register-btn">입력한 정보로 가입하기</button>
-            </div>
-
+            <!-- <div class="input-func"> -->
+                <button onclick=login() type="submit" class="button is-primary" id="login-btn">로그인하기</button>
+                <button onclick=register() type="submit" class="button is-primary is-light" id="register-btn">입력한 정보로 가입하기</button>
+            <!-- </div> -->
         </div>
-
-
-
     </form>
     </div>
 
