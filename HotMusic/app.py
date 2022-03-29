@@ -68,10 +68,8 @@ def api_delete():
 
     # for item in chkArray_receive:
     #     db.user.delete_one({'id':id_receive, 'music':item})
-    
-    return jsonify({'result' : 'success', 'msg' : '삭제 완료!'})
-
-
+    print('delete!')
+    return jsonify({'result' : 'success'})
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5001,debug=True)

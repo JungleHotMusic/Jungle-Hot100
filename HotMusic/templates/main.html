@@ -140,16 +140,14 @@
         function deleteMusic(chkArray) {
             // 로그인 아이디, 배열을 서버에 보내기 
             let userid = 'test';
-            // let userpw = $('#userpw').val();
             $.ajax({
                 type: 'POST',
                 url: '/delete',
                 data: { id_give: userid, chkArray_give: chkArray},
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        let msg = response['msg'];
-                        alert(msg);
-                        window.location.reload()
+                        alert('삭제 완료!');
+                        window.location.reload();
                     }
                 }
             })
