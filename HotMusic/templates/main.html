@@ -119,20 +119,40 @@
         function deletePlayList() {
             // 선택된 음악을 배열로 만들기
             var chkArray = new Array();
-
+            // 체크된 항목의 값을 배열에 추가
             $("input[name='tmpChkbox[]']:checked").each(function() { 
             var tmpVal = $(this).val(); 
             chkArray.push(tmpVal);
             });
-
+            // 선택된 항목이 없는 경우 경고메세지 표시
             if( chkArray.length < 1 ){
             alert("값을 선택해주시기 바랍니다.");
             return;
             }
 
+            // 배열 확인용
             console.log(chkArray);	// (2) ["A", "B"]
-            alert('삭제 완료!');
-            location.reload();
+
+            // 삭제 처리
+            deleteMusic(chkArray);
+        }
+
+        function deleteMusic(chkArray) {
+            // 로그인 아이디, 배열을 서버에 보내기 
+            let userid = 'test';
+            // let userpw = $('#userpw').val();
+            $.ajax({
+                type: 'POST',
+                url: '/delete',
+                data: { id_give: userid, chkArray_give: chkArray},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let msg = response['msg'];
+                        alert(msg);
+                        window.location.reload()
+                    }
+                }
+            })
         }
 
         function addPlayList(target) {
@@ -171,7 +191,7 @@
                     <ul>
                         {% for item in myList %}
                         <li><label class="checkbox">
-                            <input type="checkbox" name='tmpChkbox[]'>
+                            <input type="checkbox" name='tmpChkbox[]' value="{{item['title']}}">
                             {{item['title']}} - {{item['artist']}}
                         </label></li>
                         {% endfor %}

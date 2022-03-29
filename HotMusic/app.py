@@ -61,7 +61,15 @@ def api_login():
     print(id_receive, pw_receive)
     return jsonify({'result' : 'success'})
 
+@app.route('/delete', methods=['POST'])
+def api_delete():
+    # id_receive = request.form['id_give']
+    # chkArray_receive = request.form['chkArray_give']
 
+    # for item in chkArray_receive:
+    #     db.user.delete_one({'id':id_receive, 'music':item})
+    
+    return jsonify({'result' : 'success', 'msg' : '삭제 완료!'})
 
 
 
