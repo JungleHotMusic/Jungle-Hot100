@@ -239,8 +239,8 @@
             })
         }
         function logout() {
-            $.removeCookie('mytoken');
             alert('로그아웃 되었습니다.');
+            $.removeCookie('mytoken');
             window.location.reload();
         }
     </script>
@@ -250,8 +250,8 @@
     <div class="wrap">
         <div class="banner-container">
             <div class="loginButton-container">
-                <a id="buttonLogout" href="#">로그아웃</a>
-                <a id="buttonLogin" href="#">로그인/회원가입</a>
+                <a id="buttonLogout" href="#" onclick="logout()">로그아웃</a>
+                <a id="buttonLogin" href="/login">로그인/회원가입</a>
             </div>
         </div>
 
