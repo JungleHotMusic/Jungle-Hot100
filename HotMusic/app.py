@@ -1,5 +1,5 @@
-from crypt import methods
 from pydoc import cli
+from typing import List
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import jwt # pip install PyJWT
 import datetime
@@ -26,10 +26,11 @@ def main():
     # 회원의 플레이리스트
     myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
     # 랭킹 100 정보
-    musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    charts = list(db.charts.find({}, {'_id': False}))
+   
     
     # 화면 랜더링
-    return render_template('main.html', is_login = "True", myList= myList_get , musics = musics_get)
+    return render_template('main.html', is_login = "True", myList= myList_get , musics = charts)
 
 @app.route('/home')
 def home():
@@ -62,8 +63,20 @@ def api_login():
     return jsonify({'result' : 'success'})
 
 
+@app.route('/playlist', methods=['POST'])
+def insert_playlist():
+    artist_receive = request.form['artist_give']
+    title_receive = request.form['title_give']
+    
+    
+    list = {"artist" : artist_receive, "title" : title_receive}
+
+    db.playlist.insert_one(list)
+    
+    return jsonify({'result':'success', 'msg': '플레이리스트 추가 완료!'})
+    
 
 
 
 if __name__ == '__main__':
-   app.run('0.0.0.0',port=5001,debug=True)
+   app.run('0.0.0.0',port=5000,debug=True)
