@@ -23,7 +23,7 @@ SECRET_KEY = 'JungleHotMusic'
 def main():
     # 더미 정보
     # 회원의 플레이리스트
-    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1', 'id': '1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2', 'id': '2'}]
     # 랭킹 100 정보
     musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
     
@@ -68,7 +68,7 @@ def api_login():
     if login_check != None:
         payload = {
             'id' : id_receive,
-            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
+            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=300) # 테스트용
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -78,6 +78,23 @@ def api_login():
 
 @app.route('/user', methods=['GET'])
 def api_valid():
+    token_receive = request.headers['token_give']
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # userinfo = db.user.find_one({'id':payload['id']},{'_id':0})
+        userinfo = db.user.find_one({'id':payload['id']})
+
+
+        # datas = list(db.playlist.find({'id':userinfo['id']}))
+
+        return jsonify({'result':'success','name':userinfo['id']})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
+
+@app.route('/getUser', methods=['GET'])
+def get_user():
     token_receive = request.headers['token_give']
 
     try:
@@ -103,6 +120,24 @@ def api_delete():
     #     db.user.delete_one({'id':id_receive, 'music':item})
     print('delete!')
     return jsonify({'result' : 'success'})
+
+# 테스트 : 나의 플레이리스트 가져오기
+@app.route('/load_playlist', methods=['GET'])
+def load_playlist():
+    token_receive = request.headers['token_give']
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # userinfo = db.user.find_one({'id':payload['id']},{'_id':0})
+        userinfo = db.user.find_one({'id':payload['id']})
+
+
+        # datas = list(db.playlist.find({'id':userinfo['id']}))
+
+        return jsonify({'result':'success','name':userinfo['id']})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5001,debug=True)

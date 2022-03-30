@@ -67,6 +67,11 @@
     <script>
         $(document).ready(function () {
             
+            let userid = get_user_id();
+            
+            // 테스트
+            load_playlist();
+
             let tokenStatus = $.cookie('mytoken');
 
             if (tokenStatus != undefined){
@@ -77,6 +82,20 @@
             // 화면 세팅
             setDisplay(tokenStatus); // 토큰 없을 때에도 회면 설정 필요
         });
+
+        //테스트 : 나의 플레이리스트 가져오기
+        function load_playlist() {
+            $.ajax({
+                type: 'GET',
+                url: '/load_playlist',
+                headers: {'token_give': $.cookie('mytoken') },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        
+                    }
+                }
+            })
+        }
 
         function setDisplay(token) {
             if (token == undefined) {
@@ -142,7 +161,8 @@
         }
         function deleteMusic(chkArray) {
             // 로그인 아이디, 배열을 서버에 보내기 
-            let userid = 'test';
+            let userid = get_user_id();
+            console.log(userid);
             $.ajax({
                 type: 'POST',
                 url: '/delete',
@@ -150,12 +170,32 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('삭제 완료!');
-                        window.location.reload();
+                        // window.location.reload();
                     }
                 }
             })
+            window.location.reload();
         }
+
+        function get_user_id() {
+            let id;
+
+            $.ajax({
+                type: 'GET',
+                async: false, // ture: 비동기, false: 동기
+                url: '/getUser',
+                headers: {'token_give': $.cookie('mytoken') },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        id = response['name'] ;
+                    }
+                }
+            })
+            return id;
+        }
+
         function addPlayList(target) {
+            console.log("click!", $(target).val())
             if ($.cookie('mytoken') == undefined) {
                 alert('로그인 또는 회원가입 필요!');
             } else {
@@ -163,6 +203,25 @@
             }
             location.reload();
         }
+
+        //test
+        // $(".buttonAdd").click(function(){ 
+        //     alert("click")
+
+        //     var checkBtn = $(this);
+
+        //     // checkBtn.parent() : checkBtn의 부모는 <td>이다.
+        //     // checkBtn.parent().parent() : <td>의 부모이므로 <tr>이다.
+        //     var tr = checkBtn.parent().parent();
+        //     var td = tr.children();
+
+        //     console.log("클릭한 Row의 모든 데이터 : "+tr.text());
+
+        //     var title = td.eq(2).text();
+        //     var artist = td.eq(3).text();
+        //     console.log(title, artist);            
+        // });
+
         function load_user_info() {
             $.ajax({
                 type: 'GET',
@@ -247,7 +306,8 @@
                         <td><a href="{{dict_item['clickurl']}}">{{dict_item['title']}}</a></td>
                         <td>{{dict_item['artist']}}</th>
                         <td>
-                            <button class="button is-success is-small buttonAdd" onclick="addPlayList()">+</button>
+                            <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['title']}}, {{dict_item['artist']}}, {{dict_item['clickurl']}}">+</button>
+                            <!-- <input type="button" class="button is-success is-small buttonAdd" value="+"> -->
                         </td>
                     </tr>
                     {% endfor %}
