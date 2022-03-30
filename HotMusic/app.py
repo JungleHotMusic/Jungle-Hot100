@@ -113,8 +113,8 @@ def get_user():
 
 @app.route('/delete', methods=['POST'])
 def api_delete():
-    # id_receive = request.form['id_give']
-    # chkArray_receive = request.form['chkArray_give']
+    id_receive = request.form['id_give']
+    chkArray_receive = request.form['chkArray_give']
 
     # for item in chkArray_receive:
     #     db.user.delete_one({'id':id_receive, 'music':item})
