@@ -1,20 +1,16 @@
 <!Doctype html>
 <html lang="ko">
-
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bulma-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
         integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
         crossorigin="anonymous"></script>
@@ -30,14 +26,12 @@
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&amp;display=swap" rel="stylesheet">
     <title>SW사관학교 정글 4기 A-5 | HOT 100</title>
-
     <!-- style -->
     <style type="text/css">
         .wrap {
             width: 800px;
             margin: auto;
         }
-
         .banner-container {
             margin: auto;
             height: 300px;
@@ -45,20 +39,17 @@
             background-position: center;
             background-size: cover;
         }
-
         .loginButton-container {
             padding: 5px;
             text-align: right;
             font-weight: 700;
         }
-
         .mylist-container {
             margin-top: 10px;
             margin: 20px auto;
             padding: 20px;
             border: lightgray solid;
         }
-
         .ranking-container {
             margin-top: 10px;
             margin-bottom: 100px;
@@ -175,6 +166,7 @@
                 }
             })
         }
+<<<<<<< HEAD
 
         function get_user_id() {
             let id;
@@ -187,21 +179,63 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         id = response['name'] ;
+=======
+        function get_user_id() {
+            let id;
+            $.ajax({
+                type: "GET",
+                async: false, // ture: 비동기, false: 동기
+                url: "/getUser",
+                headers: {'token_give': $.cookie('mytoken') },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        id = response["name"] ;
+>>>>>>> master
                     }
                 }
             })
             return id;
         }
+<<<<<<< HEAD
 
         function addPlayList(target) {
             console.log("click!", $(target).val())
+=======
+        
+        function addPlayList(target) {
+            console.log($(target).val())
+>>>>>>> master
             if ($.cookie('mytoken') == undefined) {
                 alert('로그인 또는 회원가입 필요!');
             } else {
                 alert('추가 완료!');
-            }
+            }            
             location.reload();
+
+            let playlists = $(target).val();
+            var test = playlists.split(',');
+            console.log(test[0]);
+
+            let title = test[0];
+            let artist = test[1];
+            let click_url = test[2];
+            
+            $.ajax({
+                    type : "POST",
+                    url : "/playlist",
+                    data:{title_give: title, artist_give: artist, click_url_give: click_url, token_give:$.cookie('mytoken')},
+                    success: function (response) {
+                        if (response["result"] == "success") {
+                            alert(response["msg"]);
+                            window.location.reload()
+
+                        }else {
+                            alert("서버 오류!")
+                        }
+                    }
+                });
         }
+<<<<<<< HEAD
 
         //test
         // $(".buttonAdd").click(function(){ 
@@ -221,13 +255,16 @@
         //     console.log(title, artist);            
         // });
 
+=======
+      
+>>>>>>> master
         function load_user_info() {
             $.ajax({
-                type: 'GET',
-                url: '/user',
-                headers: {'token_give': $.cookie('mytoken') },
+                type: "GET",
+                url: "/user",
+                headers: {"token_give": $.cookie('mytoken') },
                 success: function (response) {
-                    if (response['result'] == 'success') {
+                    if (response["result"] == "success") {
                         alert(response['name'] + '회원님 안녕하세요')
                     } else {
                         $.removeCookie('mytoken');
@@ -238,13 +275,12 @@
             })
         }
         function logout() {
-            alert('로그아웃 되었습니다.');
             $.removeCookie('mytoken');
+            alert('로그아웃 되었습니다.');
             window.location.reload();
         }
     </script>
 </head>
-
 <body>
     <div class="wrap">
         <div class="banner-container">
@@ -280,7 +316,6 @@
                 <button id="buttonDelete" class="button is-danger" onclick="deletePlayList()">선택 삭제</button>
             </div>
         </section>
-
         <section class="ranking-container">
             <p class="title">ranking</p>
             <table class="table is-hoverable is-fullwidth">
@@ -298,14 +333,18 @@
                     <tr>
                         <td>
                             <figure class="image image is-48x48">
-                                <img src="{{dict_item['imageurl']}}">
+                                <img src="{{dict_item['img_url']}}">
                             </figure>
                         </td>
                         <td>{{dict_item['rank']}}</td>
-                        <td><a href="{{dict_item['clickurl']}}">{{dict_item['title']}}</a></td>
+                        <td><a href="{{dict_item['click_url']}}">{{dict_item['music']}}</a></td>
                         <td>{{dict_item['artist']}}</th>
                         <td>
+<<<<<<< HEAD
                             <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['title']}}, {{dict_item['artist']}}, {{dict_item['clickurl']}}">+</button>
+=======
+                            <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['music']}}, {{dict_item['artist']}}, {{dict_item['click_url']}}">+</button>
+>>>>>>> master
                             <!-- <input type="button" class="button is-success is-small buttonAdd" value="+"> -->
                         </td>
                     </tr>
@@ -315,5 +354,4 @@
         </section>
     </div>
 </body>
-
 </html>
