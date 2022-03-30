@@ -76,7 +76,8 @@
             if (tokenStatus != undefined) {
                 load_user_info();
                 setDisplay($.cookie('mytoken'));
-                let tmp = loadUserPlay();
+                let data = loadPlayList();
+                showPlayList(data);
             }
             // 화면 세팅
             setDisplay(tokenStatus); // 토큰 없을 때에도 회면 설정 필요
@@ -146,7 +147,8 @@
         }
         function deleteMusic(chkArray) {
             // 로그인 아이디, 배열을 서버에 보내기 
-            let userid = 'donghee';
+            let userid = get_user_id();
+            console.log(userid);
             console.log(chkArray);
             $.ajax({
                 type: 'POST',
@@ -161,6 +163,23 @@
                 }
             })
         }
+        
+        function get_user_id() {
+            let id;
+            $.ajax({
+                type: "GET",
+                async: false, // ture: 비동기, false: 동기
+                url: "/getUser",
+                headers: {'token_give': $.cookie('mytoken') },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        id = response["name"] ;
+                    }
+                }
+            })
+            return id;
+        }
+        
         function addPlayList(target) {
             if ($.cookie('mytoken') == undefined) {
                 alert('로그인 또는 회원가입 필요!');
@@ -168,7 +187,6 @@
                 alert('추가 완료!');
             }
             location.reload();
-<<<<<<< HEAD
 
             let playlists = $(target).val();
             var test = playlists.split('+');
@@ -192,8 +210,6 @@
                         }
                     }
                 });
-=======
->>>>>>> 13125be181b3df25a129a0fb8d2888490a670ee8
         }
         function load_user_info() {
             $.ajax({
@@ -217,28 +233,44 @@
             window.location.reload();
         }
 
-        function loadUserPlay() {
-            let playList;
-
+        function loadPlayList() {
+            let playData;
             $.ajax({
-                type: 'POST',
-                url: '/userPlaylists',
-                async: false,
-                data : {'token_give':$.cookie('mytoken')},
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        let data = response['data'];
-                        if (data.length != 0){
-                            playList = data;
-                        }
-                    } else {
-                        alert(response['msg']);
+                type: "POST",
+                url: "/playlists",
+                async : false,
+                data: {"token_give": $.cookie('mytoken')},
+                success : function(response){
+                    if (response['result'] == 'success'){
+                        playData = response['data'];
                     }
                 }
             })
-            return playList;
+            return playData;
         }
+
+        function showPlayList(arr){
+            $('#showLike').empty();
+            $('#editLike').empty();
+            for (let i=0; i < arr.length; i++){
+                makePlayList(arr[i]['artist'], arr[i]['title'], arr[i]['click_url']);
+            }
+        };
+
+        function makePlayList(artist,title,url){
+            let show_html = `<li>
+                                <a href="${url}">${title}</a> - ${artist}
+                            </li>`;
+            let edit_html = `<li>
+                                <label class="checkbox">
+                                <input type="checkbox" name='tmpChkbox[]' value="${title}">
+                                ${title} - ${artist}
+                            </label>
+                            </li>`;
             
+            $('#showLike').append(show_html);
+            $('#editLike').append(edit_html);
+        }
     </script>
 </head>
 
@@ -254,7 +286,7 @@
         <section class="mylist-container">
             <p class="title">나만의 플레이리스트</p>
             <div id="defaultDiv" class="mylist-container">
-                <ul>
+                <ul id="showLike">
                     {% for item in myList %}
                     <li>
                         <a href="{{item['click_url']}}">{{item['title']}}</a> - {{item['artist']}}
@@ -263,7 +295,7 @@
                 </ul>
             </div>
             <div id="editDiv" class="mylist-container">
-                <ul>
+                <ul id="editLike">
                     {% for item in myList %}
                     <li><label class="checkbox">
                             <input type="checkbox" name='tmpChkbox[]' value="{{item['title']}}">
@@ -295,19 +327,15 @@
                     <tr>
                         <td>
                             <figure class="image image is-48x48">
-                                <img src="{{dict_item['imageurl']}}">
+                                <img src="{{dict_item['img_url']}}">
                             </figure>
                         </td>
                         <td>{{dict_item['rank']}}</td>
-                        <td><a href="{{dict_item['clickurl']}}">{{dict_item['title']}}</a></td>
+                        <td><a href="{{dict_item['click_url']}}">{{dict_item['music']}}</a></td>
                         <td>{{dict_item['artist']}}</th>
                         <td>
-<<<<<<< HEAD
                             <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['music']}}+{{dict_item['artist']}}+{{dict_item['click_url']}}">+</button>
                             <!-- <input type="button" class="button is-success is-small buttonAdd" value="+"> -->
-=======
-                            <button class="button is-success is-small buttonAdd" onclick="addPlayList()">+</button>
->>>>>>> 13125be181b3df25a129a0fb8d2888490a670ee8
                         </td>
                     </tr>
                     {% endfor %}

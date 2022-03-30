@@ -95,13 +95,26 @@ def api_valid():
         return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
 
 
+@app.route('/getUser', methods=['GET'])
+def get_user():
+    token_receive = request.headers['token_give']
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # userinfo = db.user.find_one({‘id’:payload[‘id’]},{‘_id’:0})
+        userinfo = db.user.find_one({'id':payload['id']})
+        # datas = list(db.playlist.find({‘id’:userinfo[‘id’]}))
+        return jsonify({'result':'success','name':userinfo['id']})
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
+
+
 @app.route('/delete', methods=['POST'])
 def api_delete():
     id_receive = request.form['id_give']
-    value = request.form.getlist('chkArray_give[]')
+    value = request.form.getlist('chkArray_give')
     print(value)
     for item in value :
-        item = eval(item)
+        
         db.playlist.delete_one({'id':id_receive, 'title':item})
         
     print('delete!')
@@ -134,6 +147,22 @@ def insert_playlist():
     
 
     
+@app.route('/playlists', methods=['POST'])
+def load_playlist():
+    token_receive = request.form['token_give']
+    
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        
+        userinfo = db.user.find_one({'id':payload['id']})
+
+        user_playlist = list(db.playlist.find({'id':userinfo['id']},{'_id':False}))
+
+
+        return jsonify({'result':'success', 'data': user_playlist})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
     
 
 
