@@ -23,17 +23,13 @@ SECRET_KEY = 'JungleHotMusic'
 def main():
     # 더미 정보
     # 회원의 플레이리스트
-    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
+    myList_get = list(db.playlist.find({}, {'_id': False}))
     # 랭킹 100 정보
     charts = list(db.charts.find({}, {'_id': False}))
    
     
     # 화면 랜더링
-<<<<<<< HEAD
-    return render_template('main.html', is_login = "True", myList= myList_get , musics = charts)
-=======
-    return render_template('main.html', myList= myList_get , musics = musics_get)
->>>>>>> master
+    return render_template('main.html', myList= myList_get , musics = charts)
 
 @app.route('/home')
 def home():
@@ -73,7 +69,7 @@ def api_login():
     if login_check != None:
         payload = {
             'id' : id_receive,
-            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
+            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=2000)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -109,24 +105,35 @@ def api_delete():
     print('delete!')
     return jsonify({'result' : 'success'})
 
-<<<<<<< HEAD
 
 @app.route('/playlist', methods=['POST'])
 def insert_playlist():
     artist_receive = request.form['artist_give']
     title_receive = request.form['title_give']
+    click_url_receive = request.form['click_url_give']
+
+    token_receive = request.form['token_give']
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        
+        userinfo = db.user.find_one({'id':payload['id']})
+
+        list_ = {"artist" : artist_receive, "title" : title_receive, "click_url": click_url_receive,'id':userinfo['id']}
+
+        db.playlist.insert_one(list_)
+
+        return jsonify({'result':'success', 'msg': '플레이리스트 추가 완료!'})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
     
     
-    list = {"artist" : artist_receive, "title" : title_receive}
 
-    db.playlist.insert_one(list)
     
-    return jsonify({'result':'success', 'msg': '플레이리스트 추가 완료!'})
     
 
 
 
-=======
->>>>>>> master
 if __name__ == '__main__':
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0',port=5001,debug=True)

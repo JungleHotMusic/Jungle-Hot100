@@ -14,13 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
         integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
         crossorigin="anonymous"></script>
-<<<<<<< HEAD
-    <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
-  <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-=======
 
     <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
   <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
@@ -30,7 +23,6 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 
->>>>>>> master
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&amp;display=swap" rel="stylesheet">
     <title>SW사관학교 정글 4기 A-5 | HOT 100</title>
@@ -47,19 +39,11 @@
             background-position: center;
             background-size: cover;
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> master
         .loginButton-container {
             padding: 5px;
             text-align: right;
             font-weight: 700;
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> master
         .mylist-container {
             margin-top: 10px;
             margin: 20px auto;
@@ -73,28 +57,18 @@
     </style>
     <script>
         $(document).ready(function () {
-<<<<<<< HEAD
-            let tokenStatus = $.cookie('mytoken');
-=======
             
             let tokenStatus = $.cookie('mytoken');
 
->>>>>>> master
             if (tokenStatus != undefined){
                 load_user_info();
                 setDisplay($.cookie('mytoken'));
             }
-<<<<<<< HEAD
-            // 화면 세팅
-            setDisplay(tokenStatus); // 토큰 없을 때에도 회면 설정 필요
-        });
-=======
 
             // 화면 세팅
             setDisplay(tokenStatus); // 토큰 없을 때에도 회면 설정 필요
         });
 
->>>>>>> master
         function setDisplay(token) {
             if (token == undefined) {
                 // 로그인하지 않은 상태
@@ -150,30 +124,15 @@
                 alert("값을 선택해주시기 바랍니다.");
                 return;
             }
-<<<<<<< HEAD
-            // 배열 확인용
-            console.log(chkArray);  // (2) ["A", "B"]
-=======
 
             // 배열 확인용
             console.log(chkArray);	// (2) ["A", "B"]
 
->>>>>>> master
             // 삭제 처리
             deleteMusic(chkArray);
         }
         function deleteMusic(chkArray) {
             // 로그인 아이디, 배열을 서버에 보내기 
-<<<<<<< HEAD
-            let userid = get_user_id();
-            console.log(userid);
-            $.ajax({
-                type: "POST",
-                url: "/delete",
-                data: { id_give: userid, chkArray_give: chkArray },
-                success: function (response) {
-                    if (response[result] == "success") {
-=======
             let userid = 'test';
             $.ajax({
                 type: 'POST',
@@ -181,14 +140,12 @@
                 data: { id_give: userid, chkArray_give: chkArray },
                 success: function (response) {
                     if (response['result'] == 'success') {
->>>>>>> master
                         alert('삭제 완료!');
                         window.location.reload();
                     }
                 }
             })
         }
-<<<<<<< HEAD
         function get_user_id() {
             let id;
             $.ajax({
@@ -204,19 +161,28 @@
             })
             return id;
         }
+        
         function addPlayList(target) {
-            console.log("click!", $(target).val())
+            console.log($(target).val())
             if ($.cookie('mytoken') == undefined) {
                 alert('로그인 또는 회원가입 필요!');
             } else {
                 alert('추가 완료!');
-            }
+            }            
             location.reload();
+
+            let playlists = $(target).val();
+            var test = playlists.split(',');
+            console.log(test[0]);
+
+            let title = test[0];
+            let artist = test[1];
+            let click_url = test[2];
             
             $.ajax({
                     type : "POST",
                     url : "/playlist",
-                    data:{title_give: title, artist_give: artist},
+                    data:{title_give: title, artist_give: artist, click_url_give: click_url, token_give:$.cookie('mytoken')},
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert(response["msg"]);
@@ -228,19 +194,7 @@
                     }
                 });
         }
-        //test
-        // $(".buttonAdd").click(function(){ 
-        //     alert("click")
-        //     var checkBtn = $(this);
-        //     // checkBtn.parent() : checkBtn의 부모는 <td>이다.
-        //     // checkBtn.parent().parent() : <td>의 부모이므로 <tr>이다.
-        //     var tr = checkBtn.parent().parent();
-        //     var td = tr.children();
-        //     console.log("클릭한 Row의 모든 데이터 : "+tr.text());
-        //     var title = td.eq(2).text();
-        //     var artist = td.eq(3).text();
-        //     console.log(title, artist);            
-        // });
+      
         function load_user_info() {
             $.ajax({
                 type: "GET",
@@ -264,56 +218,15 @@
         }
     </script>
 </head>
-=======
-        function addPlayList(target) {
-            if ($.cookie('mytoken') == undefined) {
-                alert('로그인 또는 회원가입 필요!');
-            } else {
-                alert('추가 완료!');
-            }
-            location.reload();
-        }
-        function load_user_info() {
-            $.ajax({
-                type: 'GET',
-                url: '/user',
-                headers: {'token_give': $.cookie('mytoken') },
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        alert(response['name'] + '회원님 안녕하세요')
-                    } else {
-                        $.removeCookie('mytoken');
-                        alert(response['msg']);
-                        window.location.reload();
-                    }
-                }
-            })
-        }
-        function logout() {
-            alert('로그아웃 되었습니다.');
-            $.removeCookie('mytoken');
-            window.location.reload();
-        }
-    </script>
-</head>
-
->>>>>>> master
 <body>
     <div class="wrap">
         <div class="banner-container">
             <div class="loginButton-container">
-<<<<<<< HEAD
-                <a id="buttonLogout" href="#">로그아웃</a>
-                <a id="buttonLogin" href="#">로그인/회원가입</a>
-            </div>
-        </div>
-=======
                 <a id="buttonLogout" href="#" onclick="logout()">로그아웃</a>
                 <a id="buttonLogin" href="/login">로그인/회원가입</a>
             </div>
         </div>
 
->>>>>>> master
         <section class="mylist-container">
             <p class="title">나만의 플레이리스트</p>
             <div id="defaultDiv" class="mylist-container">
@@ -330,11 +243,7 @@
                     {% for item in myList %}
                     <li><label class="checkbox">
                             <input type="checkbox" name='tmpChkbox[]' value="{{item['title']}}">
-<<<<<<< HEAD
-                            {{item[‘title’]}} - {{item[‘artist’]}}
-=======
                             {{item['title']}} - {{item['artist']}}
->>>>>>> master
                         </label></li>
                     {% endfor %}
                 </ul>
@@ -344,10 +253,6 @@
                 <button id="buttonDelete" class="button is-danger" onclick="deletePlayList()">선택 삭제</button>
             </div>
         </section>
-<<<<<<< HEAD
-=======
-
->>>>>>> master
         <section class="ranking-container">
             <p class="title">ranking</p>
             <table class="table is-hoverable is-fullwidth">
@@ -365,26 +270,15 @@
                     <tr>
                         <td>
                             <figure class="image image is-48x48">
-<<<<<<< HEAD
                                 <img src="{{dict_item['img_url']}}">
                             </figure>
                         </td>
-                        <td>{{dict_item[‘rank’]}}</td>
-                        <td><a href="{{dict_item['click_url']}}">{{dict_item['music']}}</a></td>
-                        <td>{{dict_item[‘artist’]}}</th>
-                        <td>
-                            <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['title']}}, {{dict_item['artist']}}, {{dict_item['clickurl']}}">+</button>
-                            <!-- <input type="button" class="button is-success is-small buttonAdd" value="+"> -->
-=======
-                                <img src="{{dict_item['imageurl']}}">
-                            </figure>
-                        </td>
                         <td>{{dict_item['rank']}}</td>
-                        <td><a href="{{dict_item['clickurl']}}">{{dict_item['title']}}</a></td>
+                        <td><a href="{{dict_item['click_url']}}">{{dict_item['music']}}</a></td>
                         <td>{{dict_item['artist']}}</th>
                         <td>
-                            <button class="button is-success is-small buttonAdd" onclick="addPlayList()">+</button>
->>>>>>> master
+                            <button class="button is-success is-small buttonAdd" onclick="addPlayList(this)" value="{{dict_item['music']}}, {{dict_item['artist']}}, {{dict_item['click_url']}}">+</button>
+                            <!-- <input type="button" class="button is-success is-small buttonAdd" value="+"> -->
                         </td>
                     </tr>
                     {% endfor %}
@@ -393,8 +287,4 @@
         </section>
     </div>
 </body>
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 </html>
