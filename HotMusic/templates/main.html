@@ -63,6 +63,8 @@
             if (tokenStatus != undefined){
                 load_user_info();
                 setDisplay($.cookie('mytoken'));
+                let data = loadPlayList();
+                showPlayList(data);
             }
 
             // 화면 세팅
@@ -133,7 +135,8 @@
         }
         function deleteMusic(chkArray) {
             // 로그인 아이디, 배열을 서버에 보내기 
-            let userid = 'donghee';
+            let userid = get_user_id();
+            console.log(userid);
             console.log(chkArray);
             $.ajax({
                 type: 'POST',
@@ -148,6 +151,7 @@
                 }
             })
         }
+        
         function get_user_id() {
             let id;
             $.ajax({
@@ -218,6 +222,45 @@
             alert('로그아웃 되었습니다.');
             window.location.reload();
         }
+
+        function loadPlayList() {
+            let playData;
+            $.ajax({
+                type: "POST",
+                url: "/playlists",
+                async : false,
+                data: {"token_give": $.cookie('mytoken')},
+                success : function(response){
+                    if (response['result'] == 'success'){
+                        playData = response['data'];
+                    }
+                }
+            })
+            return playData;
+        }
+
+        function showPlayList(arr){
+            $('#showLike').empty();
+            $('#editLike').empty();
+            for (let i=0; i < arr.length; i++){
+                makePlayList(arr[i]['artist'], arr[i]['title'], arr[i]['click_url']);
+            }
+        };
+
+        function makePlayList(artist,title,url){
+            let show_html = `<li>
+                                <a href="${url}">${title}</a> - ${artist}
+                            </li>`;
+            let edit_html = `<li>
+                                <label class="checkbox">
+                                <input type="checkbox" name='tmpChkbox[]' value="${title}">
+                                ${title} - ${artist}
+                            </label>
+                            </li>`;
+            
+            $('#showLike').append(show_html);
+            $('#editLike').append(edit_html);
+        }
     </script>
 </head>
 <body>
@@ -232,7 +275,7 @@
         <section class="mylist-container">
             <p class="title">나만의 플레이리스트</p>
             <div id="defaultDiv" class="mylist-container">
-                <ul>
+                <ul id="showLike">
                     {% for item in myList %}
                     <li>
                         <a href="{{item['click_url']}}">{{item['title']}}</a> - {{item['artist']}}
@@ -241,7 +284,7 @@
                 </ul>
             </div>
             <div id="editDiv" class="mylist-container">
-                <ul>
+                <ul id="editLike">
                     {% for item in myList %}
                     <li><label class="checkbox">
                             <input type="checkbox" name='tmpChkbox[]' value="{{item['title']}}">
