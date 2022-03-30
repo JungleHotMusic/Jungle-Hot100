@@ -97,13 +97,15 @@ def api_valid():
 
 @app.route('/delete', methods=['POST'])
 def api_delete():
-    # id_receive = request.form['id_give']
-    # chkArray_receive = request.form['chkArray_give']
-
-    # for item in chkArray_receive:
-    #     db.user.delete_one({'id':id_receive, 'music':item})
+    id_receive = request.form['id_give']
+    value = request.form.getlist('chkArray_give')
+    print(value)
+    for item in value :
+        
+        db.playlist.delete_one({'id':id_receive, 'title':item})
+        
     print('delete!')
-    return jsonify({'result' : 'success'})
+    return jsonify({'result' : 'success','msg':'삭제 완료!'})
 
 
 @app.route('/playlist', methods=['POST'])
@@ -123,8 +125,9 @@ def insert_playlist():
 
         db.playlist.insert_one(list_)
 
+       
+        
         return jsonify({'result':'success', 'msg': '플레이리스트 추가 완료!'})
-
     except jwt.ExpiredSignatureError:
         return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
     
