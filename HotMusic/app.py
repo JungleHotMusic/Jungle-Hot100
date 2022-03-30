@@ -1,5 +1,6 @@
+from cmath import exp
+from crypt import methods
 from pydoc import cli
-from typing import List
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import jwt # pip install PyJWT
 import datetime
@@ -18,18 +19,18 @@ db = client.dbHotMusic
 # 서버만 알고 있기 때문에, 내 서버 안에서 인코딩(암호화), 디코딩(복호화)를 할 수 있습니다.
 SECRET_KEY = 'JungleHotMusic'
 
+
 # 임시 추가
 @app.route('/')
 def main():
     # 더미 정보
     # 회원의 플레이리스트
-    myList_get = list(db.playlist.find({}, {'_id': False}))
+    myList_get = [{'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
     # 랭킹 100 정보
-    charts = list(db.charts.find({}, {'_id': False}))
-   
+    musics_get = [{'imageurl': 'https://bulma.io/images/placeholders/128x128.png', 'rank': '1', 'title': 'title_1', 'artist': 'artist_1', 'clickurl': 'clickURL_1'}, {'imageurl': '#2', 'rank': '2', 'title': 'title_2', 'artist': 'artist_2', 'clickurl': 'clickURL_2'}]
     
     # 화면 랜더링
-    return render_template('main.html', myList= myList_get , musics = charts)
+    return render_template('main.html', myList= myList_get , musics = musics_get)
 
 @app.route('/home')
 def home():
@@ -69,7 +70,7 @@ def api_login():
     if login_check != None:
         payload = {
             'id' : id_receive,
-            'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=2000)
+            'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
@@ -105,33 +106,27 @@ def api_delete():
     print('delete!')
     return jsonify({'result' : 'success'})
 
-
-@app.route('/playlist', methods=['POST'])
-def insert_playlist():
-    artist_receive = request.form['artist_give']
-    title_receive = request.form['title_give']
-    click_url_receive = request.form['click_url_give']
-
+@app.route('/userPlaylists', methods=['POST'])
+def load_user_playlist():
     token_receive = request.form['token_give']
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        
+
         userinfo = db.user.find_one({'id':payload['id']})
 
-        list_ = {"artist" : artist_receive, "title" : title_receive, "click_url": click_url_receive,'id':userinfo['id']}
+        if userinfo is not None:
 
-        db.playlist.insert_one(list_)
+            playlists = list(db.playlists.find({'id':userinfo['id']},{'_id':False}))
+        else:
+            playlists = []
 
-        return jsonify({'result':'success', 'msg': '플레이리스트 추가 완료!'})
+        # return jsonify({'result':'success', 'data':playlists})
+        return jsonify({'result':'success'})
 
-    except jwt.ExpiredSignatureError:
-        return jsonify({'result':'fail','msg':'로그인이 만료되었습니다.'})
-    
-    
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result':'fail', 'msg':'로그인 정보가 존재하지 않습니다.'})
 
-    
-    
 
 
 
